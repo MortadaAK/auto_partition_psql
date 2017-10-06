@@ -17,21 +17,21 @@ SET default_with_oids = false;
 -- Create basic user table
 --
 
-CREATE TABLE toy_users(
-    id integer PRIMARY KEY NOT NULL,
-    username varchar(32) NOT NULL,
-    password_hash text NOT NULL,
-    email varchar(255) NOT NULL,
-    UNIQUE(username),
-    UNIQUE(email)
-);
+CREATE SEQUENCE collections_key_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MINVALUE
+	NO MAXVALUE
+	CACHE 1;
 
 CREATE TABLE toys_collections(
-    key integer NOT NULL,
+    key integer DEFAULT nextval('collections_key_seq') NOT NULL,
     ts timestamptz NOT NULL, -- Check what type of timestamp
     toys_id integer REFERENCES op_toyss(id),
     value numeric
 );
+
+ALTER SEQUENCE collections_key_seq OWNED BY toys_collections.key;
 
 -- Partitioning --
 
